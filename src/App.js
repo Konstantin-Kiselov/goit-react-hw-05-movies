@@ -9,14 +9,14 @@ import Container from './components/Container/Container';
 // import NotFoundView from './views/NotFoundView';
 // import TableView from './views/TableView';
 
-const HomeView = lazy(() =>
-  import('./views/HomeView.js' /* webpackChunkName: "home-view" */),
+const HomePage = lazy(() =>
+  import('./views/HomePage.js' /* webpackChunkName: "home-view" */),
 );
 // const AuthorsView = lazy(() =>
 //   import('./views/AuthorsView.js' /* webpackChunkName: "authors-view" */),
 // );
-const MoviesView = lazy(() => import('./views/MoviesView.js'));
-const MovieDetailsView = lazy(() => import('./views/MovieDetailsView.js'));
+const MoviesPage = lazy(() => import('./views/MoviesPage.js'));
+const MovieDetailsPage = lazy(() => import('./views/MovieDetailsPage.js'));
 // const NotFoundView = lazy(() => import('./views/NotFoundView.js'));
 // const TableView = lazy(() => import('./views/TableView.js'));
 
@@ -28,7 +28,7 @@ export default function App() {
       <Suspense fallback={<h1>ЗАГРУЖАЕМ МАРШРУТ...</h1>}>
         <Switch>
           <Route path="/" exact>
-            <HomeView />
+            <HomePage />
           </Route>
 
           {/* <Route path="/authors">
@@ -36,11 +36,11 @@ export default function App() {
           </Route> */}
 
           <Route path="/movies" exact>
-            <MoviesView />
+            <MoviesPage />
           </Route>
 
           <Route path="/movies/:movieId">
-            <MovieDetailsView />
+            <MovieDetailsPage />
           </Route>
 
           {/* <Route path="/table">

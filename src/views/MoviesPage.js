@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import * as movieAPI from '../services/bookshelf-api';
+import * as movieAPI from '../services/movie-api';
 import PageHeading from '../components/PageHeading/PageHeading';
 
-export default function MoviesView() {
+export default function MoviesPage() {
   const { url } = useRouteMatch();
   const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState('');
@@ -32,6 +32,7 @@ export default function MoviesView() {
 
   return (
     <>
+      {/* <button type="button">Go Back</button> */}
       <PageHeading text="Movies" />
       <form onSubmit={handleSubmitInput}>
         <label>

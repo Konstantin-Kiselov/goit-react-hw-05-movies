@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import {
   useParams,
   Route,
@@ -7,9 +7,11 @@ import {
   NavLink,
 } from 'react-router-dom';
 import PageHeading from '../components/PageHeading/PageHeading';
-import * as movieAPI from '../services/bookshelf-api';
+import * as movieAPI from '../services/movie-api';
 
-export default function BookDetailsView() {
+const Cast = lazy(() => import('./Cast'));
+
+export default function MovieDetailsPage() {
   const { path, url } = useRouteMatch();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
@@ -37,8 +39,7 @@ export default function BookDetailsView() {
             }}
           >
             <img
-              width="200"
-              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
               alt={movie.title}
             />
             <div>
@@ -75,7 +76,7 @@ export default function BookDetailsView() {
       <Suspense fallback={<h1>Загружаем подмаршрут...</h1>}>
         <Switch>
           <Route path={`${path}/cast`}>
-            <div>Cast</div>
+            <Cast />
           </Route>
           <Route path={`${path}/reviews`}>
             <div>Reviews</div>
