@@ -5,6 +5,7 @@ const API_KEY = 'b32f977d148061c9ab22a471ff2c7792';
 // /search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
 // /movie/${movieId}?api_key=${API_KEY}&language=en-US
 // /movie/{movie_id}/credits?api_key=<<api_key>>&language=en-US
+// /movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1
 
 async function fetchWithErrorHandling(url = '', config = {}) {
   const response = await fetch(url, config);
@@ -37,14 +38,8 @@ export function fetchMovieCredits(movieId) {
   );
 }
 
-// export function fetchAuthors() {
-//   return fetchWithErrorHandling(`${BASE_URL}/authors?_embed=books`);
-// }
-
-// export function fetchBooks() {
-//   return fetchWithErrorHandling(`${BASE_URL}/books`);
-// }
-
-// export function fetchBookById(bookId) {
-//   return fetchWithErrorHandling(`${BASE_URL}/books/${bookId}?_expand=author`);
-// }
+export function fetchMovieReviews(movieId) {
+  return fetchWithErrorHandling(
+    `${BASE_URL}/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
+  );
+}

@@ -1,15 +1,18 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import {
   useParams,
   Route,
   useRouteMatch,
   Switch,
   NavLink,
+  useHistory,
+  useLocation,
 } from 'react-router-dom';
-import PageHeading from '../components/PageHeading/PageHeading';
+// import PageHeading from '../components/PageHeading/PageHeading';
 import * as movieAPI from '../services/movie-api';
 
 const Cast = lazy(() => import('./Cast'));
+const Reviews = lazy(() => import('./Reviews'));
 
 export default function MovieDetailsPage() {
   const { path, url } = useRouteMatch();
@@ -19,7 +22,7 @@ export default function MovieDetailsPage() {
 
   useEffect(() => {
     movieAPI.fetchMovieById(movieId).then(data => {
-      console.log(data);
+      // console.log(data);
       setMovie(data);
     });
   }, [movieId]);
@@ -28,11 +31,28 @@ export default function MovieDetailsPage() {
     releaseYear = movie.release_date.slice(0, 4);
   }
 
+  const history = useHistory();
+  // console.log('history ---', history);
+
+  const location = useLocation();
+  // console.log(location.state.from);
+  // console.log('location ---', location);
+
+  const currentRef = useRef(location.state?.from?.location).current;
+  // console.log(currentRef);
+
+  const onGoBackClick = () => {
+    history.push(currentRef ?? `/`);
+  };
+
   return (
     <>
       {movie && (
         <>
-          <PageHeading text={`${movie.title}`} />
+          <button type="button" onClick={onGoBackClick}>
+            Go Back
+          </button>
+          {/* <PageHeading text={`${movie.title}`} /> */}
           <div
             style={{
               display: 'flex',
@@ -42,7 +62,7 @@ export default function MovieDetailsPage() {
               src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
               alt={movie.title}
             />
-            <div>
+            <div style={{ marginLeft: '20px' }}>
               <h2>
                 {movie.title} ({releaseYear})
               </h2>
@@ -50,27 +70,35 @@ export default function MovieDetailsPage() {
               <h3>Overview</h3>
               <p>{movie.overview}</p>
               <h3>Genres</h3>
-              <ul>
+              <ul style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
                 {movie.genres.map(({ id, name }) => {
-                  return <li key={id}>{name}</li>;
+                  return (
+                    <li
+                      style={{
+                        marginRight: '10px',
+                      }}
+                      key={id}
+                    >
+                      {name}
+                    </li>
+                  );
                 })}
               </ul>
             </div>
           </div>
-        </>
-      )}
-      <hr />
-      <p>Additional information</p>
 
-      {movie && (
-        <ul>
-          <li>
-            <NavLink to={`${url}/cast`}>Cast</NavLink>
-          </li>
-          <li>
-            <NavLink to={`${url}/reviews`}>Reviews</NavLink>
-          </li>
-        </ul>
+          <hr />
+          <p>Additional information</p>
+          <ul>
+            <li>
+              <NavLink to={`${url}/cast`}>Cast</NavLink>
+            </li>
+            <li>
+              <NavLink to={`${url}/reviews`}>Reviews</NavLink>
+            </li>
+          </ul>
+          <hr />
+        </>
       )}
 
       <Suspense fallback={<h1>Загружаем подмаршрут...</h1>}>
@@ -79,27 +107,10 @@ export default function MovieDetailsPage() {
             <Cast />
           </Route>
           <Route path={`${path}/reviews`}>
-            <div>Reviews</div>
+            <Reviews />
           </Route>
         </Switch>
       </Suspense>
     </>
   );
 }
-
-// {authors && (
-//         <ul>
-//           {authors.map(author => (
-//             <li key={author.id}>
-//               <NavLink to={`${url}/${author.id}`}>{author.name}</NavLink>
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//       <hr />
-
-//       <Suspense fallback={<h1>Загружаем подмаршрут...</h1>}>
-//         <Route path={`${path}/:authorId`}>
-//           {authors && <AuthorSubView authors={authors} />}
-//         </Route>
-//       </Suspense>

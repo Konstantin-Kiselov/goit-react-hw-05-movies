@@ -8,9 +8,28 @@ export default function Cast() {
 
   useEffect(() => {
     movieAPI.fetchMovieCredits(movieId).then(({ cast }) => {
-      console.log(cast);
+      setCast(cast);
     });
-  }, []);
+  }, [movieId]);
 
-  return <div>Тут будет Cast</div>;
+  const imgurl = 'https://image.tmdb.org/t/p/w300';
+
+  return (
+    <>
+      {cast && (
+        <ul>
+          {cast.map(({ id, name, character, profile_path }) => (
+            <li key={id}>
+              {profile_path && (
+                <img width="100" src={`${imgurl}${profile_path}`} alt={name} />
+              )}
+
+              <p>{name}</p>
+              <p>Character: {character}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
 }

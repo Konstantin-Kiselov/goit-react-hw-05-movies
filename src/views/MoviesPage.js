@@ -1,12 +1,34 @@
-import { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import * as movieAPI from '../services/movie-api';
 import PageHeading from '../components/PageHeading/PageHeading';
 
 export default function MoviesPage() {
   const { url } = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+
   const [movies, setMovies] = useState([]);
+
   const [query, setQuery] = useState('');
+
+  const getQuery = new URLSearchParams(location.search).get('query');
+  const [searchQuery, setSearchQuery] = useState(getQuery ? getQuery : '');
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      return;
+    }
+
+    movieAPI.fetchSearchMovies(searchQuery).then(({ results }) => {
+      if (results.length === 0) {
+        alert(`Not match for reaquest ${searchQuery}`);
+        return;
+      }
+
+      setMovies(results);
+    });
+  }, [searchQuery]);
 
   const onInputChange = event => {
     setQuery(event.target.value);
@@ -17,22 +39,17 @@ export default function MoviesPage() {
 
     if (query.trim() === '') {
       alert('Please enter text');
+      return;
     }
 
-    movieAPI.fetchSearchMovies(query).then(({ results }) => {
-      if (results.length === 0) {
-        alert(`Not match for reaquest ${query}`);
-      }
+    history.push({ ...location, search: `query=${query}` });
 
-      setMovies(results);
-    });
-
+    setSearchQuery(query);
     setQuery('');
   };
 
   return (
     <>
-      {/* <button type="button">Go Back</button> */}
       <PageHeading text="Movies" />
       <form onSubmit={handleSubmitInput}>
         <label>
@@ -52,7 +69,14 @@ export default function MoviesPage() {
         <ul>
           {movies.map(movie => (
             <li key={movie.id}>
-              <Link to={`${url}/${movie.id}`}>{movie.title}</Link>
+              <Link
+                to={{
+                  pathname: `${url}/${movie.id}`,
+                  state: { from: { location } },
+                }}
+              >
+                {movie.title}
+              </Link>
             </li>
           ))}
         </ul>
