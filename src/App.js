@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import AppBar from './components/AppBar/AppBar';
 import Container from './components/Container/Container';
 // import HomeView from './views/HomeView';
@@ -31,10 +31,6 @@ export default function App() {
             <HomePage />
           </Route>
 
-          {/* <Route path="/authors">
-            <AuthorsView />
-          </Route> */}
-
           <Route path="/movies" exact>
             <MoviesPage />
           </Route>
@@ -43,13 +39,7 @@ export default function App() {
             <MovieDetailsPage />
           </Route>
 
-          {/* <Route path="/table">
-            <TableView />
-          </Route>
-
-          <Route>
-            <NotFoundView />
-          </Route> */}
+          <Redirect to="/" />
         </Switch>
       </Suspense>
     </Container>

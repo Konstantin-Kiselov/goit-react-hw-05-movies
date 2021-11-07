@@ -13,14 +13,6 @@ export default function Navigation() {
         Home
       </NavLink>
 
-      {/* <NavLink
-        to="/authors"
-        className={styles.link}
-        activeClassName={styles.activeLink}
-      >
-        Авторы
-      </NavLink> */}
-
       <NavLink
         to="/movies"
         className={styles.link}
@@ -28,14 +20,6 @@ export default function Navigation() {
       >
         Movies
       </NavLink>
-
-      {/* <NavLink
-        to="/table"
-        className={styles.link}
-        activeClassName={styles.activeLink}
-      >
-        Таблица
-      </NavLink> */}
     </nav>
   );
 }
